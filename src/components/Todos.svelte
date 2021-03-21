@@ -17,93 +17,96 @@
       newTodoName = ''
     }
   
-    let filter = 'all'
+    let filter = 'All'
     const filterTodos = (filter, todos) => 
-      filter === 'active' ? todos.filter(t => !t.completed) :
-      filter === 'completed' ? todos.filter(t => t.completed) : 
+      filter === 'Active' ? todos.filter(t => !t.completed) :
+      filter === 'Inactive' ? todos.filter(t => t.completed) : 
       todos
-  
+      let selected;
   </script>
   
   <!-- Todos.svelte -->
-  <div class="max-w-3xl mx-auto mt-11  bg-white rounded shadow-2xl">
-  
+  <div class="overflow-x-auto">
+    <div class="min-w-screen min-h-screen bg-gray-100 flex items-center justify-center  font-sans overflow-hidden">
+        <div class="w-full lg:w-5/6">
+            <div class="bg-white shadow-md rounded my-6">
     <!-- NewTodo -->
-    <form on:submit|preventDefault={addTodo} class="m-4" >
-      <h2 class="m-0 flex-initial text-center">
-        <label for="todo-0" class="leading-4 font-light
-        p-3.5 mb-4 text-center">
-          What needs to be done?
-        </label>
-      </h2>
-      <input bind:value={newTodoName} type="text" id="todo-0" autocomplete="off"
-       class="p-8 border-2 border-solid 
-      border-gray-300 shadow-inner w-full inline-block text-3xl rounded" />
-      <button type="submit" disabled="" 
-      class="w-full inline-block text-3xl py-3 pr-4 border-b-2 border-solid 
-      rounded transition duration-500 ease-in-out bg-green-600 hover:bg-yellow-600
-      transform hover:-translate-y-1 hover:scale-100  text-white mt-2 ">
-        Add
-      </button>
-    </form>
+              <div class="m-1">
+                <h2 class="m-0 flex-initial text-center">
+                  <label for="todo-0" class="leading-4 font-light
+                  p-3.5 mb-4 text-center">
+                    What needs to be done?
+                  </label>
+                </h2>
+                <div class="flex mt-4">
+                    <input bind:value={newTodoName} class="shadow appearance-none border rounded w-full py-2 px-3 mr-4 text-grey-darker" placeholder="Add Todo">
+                    <button class="flex-no-shrink p-2 border-2 rounded text-teal border-teal hover:text-white hover:bg-teal" on:click={() => addTodo()}>Add</button>
+                </div>
+            </div>
+  
+  
+  
   
     <!-- Filter -->
-    <div class="w-full -my-0 flex justify-between mt-5 mx-4 ">
-      <button class="rounded transition duration-500 ease-in-out bg-green-600 hover:bg-yellow-600
-      transform hover:-translate-y-1 hover:scale-100  py-3 px-4 mr-2 flex-auto text-white toggle-btn" class:btn__primary={filter === 'all'} aria-pressed={filter === 'all'} on:click={()=> filter = 'all'} >
-        <span class="absolute w-1 h-1 overflow-hidden">Show</span>
-        <span>All</span>
-        <span class="absolute w-1 h-1 overflow-hidden">tasks</span>
-      </button>
-      <button class="rounded py-3 px-4 mr-2 flex-auto transition duration-500 ease-in-out bg-green-600 hover:bg-yellow-600
-      transform hover:-translate-y-1 hover:scale-100   text-white toggle-btn" class:btn__primary={filter === 'active'} aria-pressed={filter === 'active'} on:click={()=> filter = 'active'} >
-        <span class="absolute w-1 h-1 overflow-hidden">Show</span>
-        <span>Active</span>
-        <span class="absolute w-1 h-1 overflow-hidden">tasks</span>
-      </button>
-      <button class="rounded py-3 px-2 mr-8 flex-auto transition duration-500 ease-in-out bg-green-600 hover:bg-yellow-600
-      transform hover:-translate-y-1 hover:scale-100  text-white capitalize toggle-btn" class:btn__primary={filter === 'completed'} aria-pressed={filter === 'completed'} on:click={()=> filter = 'completed'} >
-        <span class="absolute w-1 h-1 overflow-hidden">Show</span>    
-        <span>Completed</span>
-        <span class="absolute w-1 h-1 overflow-hidden">tasks</span>
-      </button>
+    <div class="w-1/4">
+      <select bind:value={selected} on:change={()=> filter = selected}
+          class="m-1 h-full rounded border-t  border-r border-b block appearance-none w-full bg-white border-gray-400 text-gray-700 py-2 px-4 pr-8 leading-tight focus:outline-none focus:border-l focus:border-r focus:bg-white focus:border-gray-500">
+          <option >All</option>
+          <option >Active</option>
+          <option >Inactive</option>
+      </select>
+      <div
+          class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+          <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+          </svg>
+      </div>
     </div>
-  
     <!-- TodosStatus -->
-    <h2 id="list-heading" class="px-4 text-center text-4xl font-black text-green-500 capitalize">{completedTodos} out of {totalTodos} items completed</h2>
-  
-    <!-- Todos -->
-    <ul role="list" class="mx-4 todo-list stack-large" aria-labelledby="list-heading">
+    <table class="min-w-max w-full table-auto">
+      <thead>
+          <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+              <th class="py-3 px-6 text-left">Todo</th>         
+              <th class="py-3 px-6 text-center">Status</th>
+              <th class="py-3 px-6 text-center">Actions</th>
+          </tr>
+      </thead>
+      <tbody class="text-gray-600 text-sm font-light">
     {#each filterTodos(filter, todos) as todo (todo.id)}
-      <li class="todo">
-        <div class="stack-small">
-          <div class="c-cb">
-              <input type="checkbox" id="todo-{todo.id}" 
-                on:click={() => todo.completed = !todo.completed}
-                checked={todo.completed} class="box-border h-12 w-12 p-4 border-4 border-green-500 rounded"
-              />          
-              <label for="todo-{todo.id}" class="todo-label">
-              {todo.name}
-            </label>
+      
+    <tr class="border-b border-gray-200 hover:bg-gray-100">
+      <td class="py-3 px-6 text-left whitespace-nowrap">
+          <div class="flex items-center">
+            <span class="font-medium">{todo.name}</span>
           </div>
-          <div class="w-full -my-0 flex justify-between mt-5 mx-4">
-            <button type="button" class="rounded transition duration-500 ease-in-out bg-green-600 hover:bg-yellow-600
-            transform hover:-translate-y-1 hover:scale-100  py-3 px-4 mr-2 flex-auto text-white toggle-btn">
-              Edit <span class="absolute w-1 h-1 overflow-hidden">{todo.name}</span>
-            </button>
-            <button type="button" class="rounded transition duration-500 ease-in-out bg-green-600 hover:bg-red-600
-            transform hover:-translate-y-1 hover:scale-100  py-3 px-4 mr-2 flex-auto text-white toggle-btn"
-              on:click={() => removeTodo(todo)}
-            >
-              Delete <span class="absolute w-1 h-1 overflow-hidden">{todo.name}</span>
-            </button>
+      </td>
+      <td class="py-3 px-6 text-center">
+        <span class="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs" class:completed={todo.completed}>status</span>
+    </td>
+    <td class="py-3 px-6 text-center">
+      <div class="flex item-center justify-center">
+          <div class="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
           </div>
-        </div>
-      </li>
-    {:else}
-      <li>Nothing to do here!</li>
+          <div class="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+              </svg>
+          </div>
+          <div class="w-4 mr-2 transform hover:text-purple-500 hover:scale-110" on:click={() => removeTodo(todo)}>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+          </div>
+      </div>
+  </td>
+  </tr>
     {/each}
-    </ul>
+      </tbody>
+    </table>
   
     <hr />
   
@@ -113,4 +116,7 @@
       <button type="button" class="btn btn__primary">Remove completed</button>
     </div>
   
+  </div>
+        </div>
+    </div>
   </div>
