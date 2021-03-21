@@ -46,7 +46,6 @@
             </div>
   
   
-  <div class="completed">ss</div>
   
     <!-- Filter -->
     <div class="w-1/4">
