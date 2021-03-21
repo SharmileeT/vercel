@@ -14,4 +14,7 @@
   @tailwind components;
   @tailwind utilities;
   
+  .completed{
+    @apply bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs;
+  }
 </style>

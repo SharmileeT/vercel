@@ -23,7 +23,7 @@
       filter === 'Inactive' ? todos.filter(t => t.completed) : 
       todos
       let selected;
-      console.log({todos});
+   
   </script>
   
   <!-- Todos.svelte -->
