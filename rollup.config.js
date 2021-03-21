@@ -37,6 +37,15 @@ export default {
 	},
 	plugins: [
 		svelte({
+			preprocess: sveltePreprocess({
+				sourceMap: !production,
+				postcss: {
+				  plugins: [
+				   require("tailwindcss"), 
+				   require("autoprefixer"),
+				  ],
+				},
+			  }),
 			// enable run-time checks when not in production
 			dev: !production,
 			// we'll extract any component CSS out into
